@@ -20,3 +20,18 @@ body {
             radial-gradient(at 18% 38%, hsla(229,67%,69%,1) 0px, transparent 50%),
             radial-gradient(at 89% 81%, hsla(173,82%,75%,1) 0px, transparent 50%);
 }
+
+.dropdown-enter-active,
+.dropdown-leave-active {
+    transition: opacity .5s ease-in-out, transform .5s ease-in-out;
+}
+.dropdown-enter-from,
+.dropdown-leave-to {
+    opacity: 0;
+    transform: translateY(-10px);
+}
+.dropdown-enter-to,
+.dropdown-leave-from {
+    opacity: 1;
+    transform: translateY(0);
+}
