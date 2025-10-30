@@ -2,23 +2,16 @@
 const props = defineProps<{
   radioList: Array<{ value: string, text: string }>,
 }>();
-const emit = defineEmits<{
-  (event: 'changeValueRadio', value: string): void,
-}>();
 
-const value = ref(props.radioList[0].value);
-
-watch(value, (newValue) => {
-  emit("changeValueRadio", newValue);
-})
+const model = defineModel();
+model.value = props.radioList[0].value;
 
 const activeRadioIndex = computed<number>(() => {
-  return props.radioList.findIndex((item) => item.value === value.value);
+  return props.radioList.findIndex((item) => item.value === model.value);
 });
 
-function selectUnit(selectedValue: string) {
-  value.value = selectedValue;
-  emit('changeValueRadio', selectedValue);
+function selectRadio(selectedValue: string) {
+  model.value = selectedValue;
 }
 </script>
 
@@ -32,8 +25,8 @@ function selectUnit(selectedValue: string) {
         v-for="radio in radioList"
         :key="radio.value"
         class="flex-1 w-[110pt] transition-colors z-[2] text-center leading-[36pt] cursor-pointer"
-        :class="{ 'text-black': value === radio.value }"
-        @click="selectUnit(radio.value)"
+        :class="{ 'text-black': model === radio.value }"
+        @click="selectRadio(radio.value)"
     >
       {{ radio.text }}
     </div>

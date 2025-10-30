@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-import type { CityList, City, CityForecastDetails } from "~/types/City";
+import { type CityList, type City, type CityForecastDetails } from "~/types/City";
 import ModalWindow from "~/components/UI/ModalWindow.vue";
 
 const props = defineProps<{
@@ -10,33 +10,53 @@ const props = defineProps<{
   emptyText: string,
 }>();
 
-const emit = defineEmits<{
-  (event: 'changeValueSearchInput', value: string): void,
-}>();
+const model = defineModel({ default: '' });
 
-const search = ref<string>("");
+const dropdown = useTemplateRef('dropdown');
+
 const searchList = ref<Array<City>>([]);
 const touchedSearchInput = ref(false);
 const isOpenModal = ref(false);
-const item = ref<City | null>(null);
 const itemDetails = ref<CityForecastDetails | null>(null);
 
-watch(search, async (newValue) => {
-  emit('changeValueSearchInput', newValue);
+const store = useWeatherStore();
+const { displayUnit } = storeToRefs(store);
+
+onMounted(() => {
+    document.addEventListener('keydown', handleEnter);
+    document.addEventListener('click', handleClick);
 })
+
+onBeforeUnmount(() => {
+    document.removeEventListener('keydown', handleEnter);
+    document.removeEventListener('click', handleClick);
+})
+
+function handleEnter(event: KeyboardEvent) {
+  if (event.key === 'Enter') {
+    handleSearch();
+  }
+}
+
+function handleClick(event: MouseEvent) {
+  if (dropdown.value && !dropdown.value.contains(event.target as Node)) {
+    isOpenModal.value = false;
+  }
+}
 
 function onCloseModal() {
   isOpenModal.value = false;
+  store.selectCity(null);
 }
 
 async function handleSearch() {
-  if (search.value.length > 2) {
-    const data = await props.searchCallback(search.value);
-    if (data) {
-      searchList.value = data.list;
+    if (model.value.length > 2) {
+      const data = await props.searchCallback(model.value);
+      if (data) {
+        searchList.value = data.list;
+      }
+      touchedSearchInput.value = true;
     }
-    touchedSearchInput.value = true;
-  }
 }
 
 function hideSearchList() {
@@ -45,10 +65,11 @@ function hideSearchList() {
 }
 
 async function openModal(selectedItem: City) {
+  model.value = '';
   if (props.itemCallback) {
     const data = await props.itemCallback(selectedItem);
     if (data && selectedItem) {
-      item.value = selectedItem;
+      store.selectCity(selectedItem);
       itemDetails.value = data;
       isOpenModal.value = true;
     }
@@ -69,10 +90,11 @@ async function openModal(selectedItem: City) {
         name="city"
         :placeholder="placeholder"
         class="w-full py-[20px] pl-[60px] pr-[20px] rounded-l-lg bg-gray-200/50 backdrop-blur-[60px] placeholder:text-white"
-        v-model.trim="search"
+        @blur="hideSearchList"
+        v-model.trim="model"
       />
       <button
-        class="px-[25px] py-[10px] bg-white text-black rounded-r-lg"
+        class="min-w-[103px] px-[25px] py-[10px] bg-white text-black rounded-r-lg"
         @blur="hideSearchList"
         @click="handleSearch"
       >
@@ -83,27 +105,35 @@ async function openModal(selectedItem: City) {
     <Transition name="dropdown">
       <ul
         v-if="searchList.length"
+        ref="dropdown"
         class="w-full absolute p-[15px] rounded-lg bg-gray-200/50 backdrop-blur-[60px] mt-[10px]"
       >
         <li
           v-for="search in searchList"
           :key="search.id"
-          class="columns-4 rounded-lg p-[5px] cursor-pointer hover:bg-white hover:text-black transition duration-500"
+          class="grid grid-cols-5 gap-1 items-center rounded-lg p-[5px] cursor-pointer hover:bg-white hover:text-black transition duration-500"
           @click="openModal(search)"
         >
-          <div>{{ search.name }}</div>
-          <div>{{ search.main.temp }}</div>
+          <div class="col-span-2 flex items-center gap-[5px]">
+            <span>{{ search.name }}, {{ search.sys.country }}</span>
+            <img
+              :src="`https://cdn.jsdelivr.net/npm/flag-icons@7.5.0/flags/4x3/${search.sys.country.toLowerCase()}.svg`"
+              :alt="`Flag's icon ${search.weather[0].icon}`"
+              class="w-[23px] h-[20px] inline-block"
+            />
+          </div>
+          <div>{{ search.main.temp }} {{ displayUnit }}</div>
           <img
-              :src="`https://openweathermap.org/img/wn/${search.weather[0].icon}@2x.png`"
-              :alt="`Иконка погоды ${search.weather[0].icon}`"
-              class="w-[40px] h-[40px]"
+            :src="`https://openweathermap.org/img/wn/${search.weather[0].icon}@2x.png`"
+            :alt="`Weather's icon ${search.weather[0].icon}`"
+            class="w-[50px] h-[50px]"
           />
           <div>{{ search.coord.lat }}, {{ search.coord.lon }}</div>
         </li>
       </ul>
     </Transition>
     <ModalWindow :isOpen="isOpenModal" :onClose="onCloseModal">
-      <CityForecastDetails :city="item as City" :details="itemDetails as CityForecastDetails" />
+      <CityForecastDetails :details="itemDetails as CityForecastDetails"/>
     </ModalWindow>
     <div v-if="!searchList.length && touchedSearchInput" class="absolute mt-[10px] px-[40px]">
       {{ emptyText }}
