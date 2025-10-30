@@ -50,3 +50,8 @@ export interface CityForecastDetails {
     timezone: string,
     timezone_offset: number,
 }
+
+export enum Units {
+    metric = "°C",
+    imperial = "°F"
+}
