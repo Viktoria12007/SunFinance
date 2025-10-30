@@ -1,14 +1,16 @@
 <script lang="ts" setup>
-import type { City, CityForecastDetails } from "~/types/City";
+import { type CityForecastDetails } from "~/types/City";
 
 const props = defineProps<{
-  city: City,
   details: CityForecastDetails,
 }>()
 
 const currentDate = computed(() => {
-  return new Date((props.details.current.dt + props.details.timezone_offset) * 1000);
+    return new Date(props.details.current.dt * 1000);
 })
+
+const store = useWeatherStore();
+const { displayUnit, city } = storeToRefs(store);
 </script>
 
 <template>
@@ -22,14 +24,16 @@ const currentDate = computed(() => {
       {{ city.name }}, {{ city.sys.country }}
     </div>
     <div>
-      {{ currentDate.toLocaleString('en-US', { weekday: 'long' }) }},
+      {{ currentDate.toLocaleString('en-US', { weekday: 'long', timeZone: details.timezone }) }},
       {{ currentDate.getDate() }}
     </div>
     <div>
-      {{ details.current.temp }}
+      {{ details.current.temp }} {{ displayUnit }}
     </div>
     <div>
-      {{ details.daily[0].temp.min }}/{{ details.daily[0].temp.max }}
+      {{ details.daily[0].temp.min }} {{ displayUnit }}
+      /
+      {{ details.daily[0].temp.max }} {{ displayUnit }}
     </div>
   </div>
 </template>
