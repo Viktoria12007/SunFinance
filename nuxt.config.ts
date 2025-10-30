@@ -4,7 +4,8 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   css: ['~/assets/css/main.css', '@fortawesome/fontawesome-svg-core/styles.css'],
   modules: [
-      '@nuxtjs/tailwindcss'
+      '@nuxtjs/tailwindcss',
+      '@pinia/nuxt',
   ],
   plugins: [
       '~/plugins/fontawesome'
