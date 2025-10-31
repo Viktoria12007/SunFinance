@@ -83,18 +83,19 @@ async function openModal(selectedItem: City) {
       <FontAwesomeIcon
         :icon="['fas', 'magnifying-glass']"
         size="lg"
-        class="absolute z-[2] top-[50%] left-[20px] -translate-y-1/2 text-white"
+        class="absolute z-[2] top-[50%] left-[1.1rem] -translate-y-1/2 text-white"
       />
       <input
         type="text"
         name="city"
         :placeholder="placeholder"
-        class="w-full py-[20px] pl-[60px] pr-[20px] rounded-l-lg bg-gray-200/50 backdrop-blur-[60px] placeholder:text-white"
+        class="w-full py-[1.1rem] pl-[3.3rem] pr-[1.1rem] rounded-l-lg bg-gray-200/50 backdrop-blur-[3.3rem] placeholder:text-white"
         @blur="hideSearchList"
         v-model.trim="model"
       />
       <button
-        class="min-w-[103px] px-[25px] py-[10px] bg-white text-black rounded-r-lg"
+        ref="searchButton"
+        class="min-w-[5.7rem] px-[1.4rem] py-[0.6rem] bg-white text-black rounded-r-lg"
         @blur="hideSearchList"
         @click="handleSearch"
       >
@@ -106,27 +107,27 @@ async function openModal(selectedItem: City) {
       <ul
         v-if="searchList.length"
         ref="dropdown"
-        class="w-full absolute p-[15px] rounded-lg bg-gray-200/50 backdrop-blur-[60px] mt-[10px]"
+        class="w-full absolute z-[5] p-[0.8rem] rounded-lg bg-gray-200/50 backdrop-blur-[3.3rem] mt-[0.6rem]"
       >
         <li
           v-for="search in searchList"
           :key="search.id"
-          class="grid grid-cols-5 gap-1 items-center rounded-lg p-[5px] cursor-pointer hover:bg-white hover:text-black transition duration-500"
+          class="grid grid-cols-5 gap-1 items-center rounded-lg p-[0.3rem] cursor-pointer hover:bg-white hover:text-black transition duration-500"
           @click="openModal(search)"
         >
-          <div class="col-span-2 flex items-center gap-[5px]">
+          <div class="col-span-2 flex items-center gap-[0.3rem]">
             <span>{{ search.name }}, {{ search.sys.country }}</span>
             <img
               :src="`https://cdn.jsdelivr.net/npm/flag-icons@7.5.0/flags/4x3/${search.sys.country.toLowerCase()}.svg`"
               :alt="`Flag's icon ${search.weather[0].icon}`"
-              class="w-[23px] h-[20px] inline-block"
+              class="w-[1.3rem] h-[1.1rem] inline-block"
             />
           </div>
           <div>{{ search.main.temp }} {{ displayUnit }}</div>
           <img
             :src="`https://openweathermap.org/img/wn/${search.weather[0].icon}@2x.png`"
             :alt="`Weather's icon ${search.weather[0].icon}`"
-            class="w-[50px] h-[50px]"
+            class="w-[2.8rem] h-[2.8rem]"
           />
           <div>{{ search.coord.lat }}, {{ search.coord.lon }}</div>
         </li>
@@ -135,7 +136,7 @@ async function openModal(selectedItem: City) {
     <ModalWindow :isOpen="isOpenModal" :onClose="onCloseModal">
       <CityForecastDetails :details="itemDetails as CityForecastDetails"/>
     </ModalWindow>
-    <div v-if="!searchList.length && touchedSearchInput" class="absolute mt-[10px] px-[40px]">
+    <div v-if="!searchList.length && touchedSearchInput" class="absolute mt-[0.6rem] px-[2.2rem]">
       {{ emptyText }}
     </div>
   </div>

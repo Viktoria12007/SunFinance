@@ -14,11 +14,11 @@ const { displayUnit, city } = storeToRefs(store);
 </script>
 
 <template>
-  <div v-if="details && city" class="flex flex-col items-center gap-y-[10px]">
+  <div v-if="details && city" class="flex flex-col items-center gap-y-[0.6rem]">
     <img
         :src="`https://openweathermap.org/img/wn/${city.weather[0].icon}@2x.png`"
         :alt="`Weather's icon ${city.weather[0].icon}`"
-        class="w-[50px] h-[50px]"
+        class="w-[2.8rem] h-[2.8rem]"
     />
     <div>
       {{ city.name }}, {{ city.sys.country }}

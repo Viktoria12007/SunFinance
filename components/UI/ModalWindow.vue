@@ -16,10 +16,10 @@ const props = defineProps<{
           @click="onClose"
       >
         <div
-            class="relative w-[320px] max-w-[90%] p-[20px] rounded-lg bg-white text-black"
+            class="relative w-[17.8rem] max-w-[90%] p-[1.1rem] rounded-lg bg-white text-black"
             @click.stop=""
         >
-          <button class="absolute top-[0] right-[-50px] p-[8px] rounded-full bg-white" @click="onClose">
+          <button class="absolute top-[0] right-[-2.8rem] p-[0.4rem] rounded-full bg-white" @click="onClose">
             <FontAwesomeIcon icon="fa-solid fa-xmark" />
           </button>
           <div class="modal-body">

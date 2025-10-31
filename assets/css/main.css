@@ -6,8 +6,8 @@ body,
 
 html,
 body {
-    line-height: 24px;
-    font-size: 18px;
+    line-height: 20px;
+    font-size: 14px;
     color: #ffffff;
     background-color:#af99ff;
     background-repeat: no-repeat;
@@ -34,4 +34,12 @@ body {
 .dropdown-leave-from {
     opacity: 1;
     transform: translateY(0);
+}
+
+@media(width >= 1024px) {
+    html,
+    body {
+        line-height: 24px;
+        font-size: 18px;
+    }
 }

@@ -8,8 +8,8 @@ const { getCityList, getCityForecastDetails } = store;
 </script>
 
 <template>
-  <div class="min-h-screen p-[25px]">
-    <div class="flex gap-[30px]">
+  <div class="min-h-screen p-[1.4rem]">
+    <div class="flex flex-col-reverse flex-wrap lg:flex-row gap-[1.7rem]">
       <SearchInput
         :searchCallback="getCityList"
         :itemCallback="getCityForecastDetails"
@@ -17,7 +17,7 @@ const { getCityList, getCityForecastDetails } = store;
         empty-text="Such a city does not exist"
         v-model="q"
       />
-      <RadioInputs :radioList="radioList" v-model="unit"/>
+      <RadioInputs class="self-end" :radioList="radioList" v-model="unit"/>
     </div>
   </div>
 </template>
