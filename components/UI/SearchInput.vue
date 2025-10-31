@@ -13,6 +13,7 @@ const props = defineProps<{
 const model = defineModel({ default: '' });
 
 const dropdown = useTemplateRef('dropdown');
+const searchButton = useTemplateRef('searchButton');
 
 const searchList = ref<Array<City>>([]);
 const touchedSearchInput = ref(false);
@@ -39,8 +40,8 @@ function handleEnter(event: KeyboardEvent) {
 }
 
 function handleClick(event: MouseEvent) {
-  if (dropdown.value && !dropdown.value.contains(event.target as Node)) {
-    isOpenModal.value = false;
+  if (dropdown.value && !dropdown.value.contains(event.target as Node) && searchButton.value !== event.target) {
+    hideSearchList();
   }
 }
 
