@@ -12,7 +12,7 @@ export const useWeatherStore = defineStore('weather', () => {
     const radioList = ref([{ value: "metric", text: "Metric: °C, m/s" }, { value: "imperial", text: "Imperial: °F, mph" }]);
 
     const displayUnit = computed(() => {
-       return unit.value === Units.imperial ? Units.imperial : Units.metric;
+       return unit.value === "imperial" ? Units.imperial : Units.metric;
     });
 
     function selectCity(selectedCity: City | null) {
